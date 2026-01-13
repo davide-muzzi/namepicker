@@ -1,0 +1,77 @@
+name: Build and Publish Images
+
+on:
+  push:
+    branches: ["main"]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GHCR_TOKEN }}
+
+      - name: Build and push backend image
+        uses: docker/build-push-action@v6
+        with:
+          context: ./backend
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/namepicker-backend:${{ github.run_number }}
+
+      - name: Build and push frontend image
+        uses: docker/build-push-action@v6
+        with:
+          context: ./frontend
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/namepicker-frontend:${{ github.run_number }}
+
+      - name: Generate docker-compose file
+        run: |
+          cat > docker-compose.generated.yml <<EOF
+          services:
+            backend:
+              image: ghcr.io/${{ github.repository_owner }}/namepicker-backend:${{ github.run_number }}
+              volumes:
+                - backend-db:/app/data
+              networks:
+                - namepicker-net
+
+            frontend:
+              image: ghcr.io/${{ github.repository_owner }}/namepicker-frontend:${{ github.run_number }}
+              ports:
+                - "8324:80"
+              depends_on:
+                - backend
+              networks:
+                - namepicker-net
+
+          volumes:
+            backend-db:
+
+          networks:
+            namepicker-net:
+              driver: bridge
+          EOF
+
+      - name: Upload docker-compose artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: docker-compose
+          path: docker-compose.generated.yml
