@@ -1,0 +1,25 @@
+services:
+  backend:
+    build: ./backend
+    container_name: namepicker-backend
+    volumes:
+      - backend-db:/app/data
+    networks:
+      - namepicker-net
+
+  frontend:
+    build: ./frontend
+    container_name: namepicker-frontend
+    ports:
+      - "8324:80"
+    depends_on:
+      - backend
+    networks:
+      - namepicker-net
+
+volumes:
+  backend-db:
+
+networks:
+  namepicker-net:
+    driver: bridge

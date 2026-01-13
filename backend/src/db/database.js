@@ -6,7 +6,7 @@ import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const DB_PATH = path.join(__dirname, "../../db.sqlite");
+const DB_PATH = path.join(__dirname, "../../data/db.sqlite");
 const SCHEMA_PATH = path.join(__dirname, "schema.sql");
 
 export const db = new sqlite3.Database(DB_PATH, (err) => {
