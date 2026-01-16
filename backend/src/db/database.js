@@ -15,6 +15,12 @@ export const db = new sqlite3.Database(DB_PATH, (err) => {
     process.exit(1);
   }
   console.log("Connected to SQLite database");
+  db.run("PRAGMA foreign_keys = ON;", (pragmaErr) => {
+    if (pragmaErr) {
+      console.error("Failed to enable foreign keys:", pragmaErr);
+      process.exit(1);
+    }
+  });
 });
 
 // Initialize schema

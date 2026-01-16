@@ -18,9 +18,9 @@ app.get("/health", (req, res) => {
 });
 
 // routes
-app.use("/classes", classesRouter);
-app.use("/students", studentsRouter);
-app.use("/pick", pickRouter);
+app.use("/api/classes", classesRouter);
+app.use("/api/students", studentsRouter);
+app.use("/api/pick", pickRouter);
 
 app.listen(PORT, () => {
   console.log(`Backend running on port ${PORT}`);

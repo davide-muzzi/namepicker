@@ -39,4 +39,35 @@ router.delete("/:id", (req, res) => {
   });
 });
 
+// update student
+router.put("/:id", (req, res) => {
+  const { name, class_id } = req.body;
+  if (!name && !class_id)
+    return res.status(400).json({ error: "name or class_id required" });
+
+  // Build dynamic update
+  const fields = [];
+  const values = [];
+
+  if (name) {
+    fields.push("name = ?");
+    values.push(name);
+  }
+  if (class_id) {
+    fields.push("class_id = ?");
+    values.push(class_id);
+  }
+
+  values.push(req.params.id);
+
+  db.run(
+    `UPDATE students SET ${fields.join(", ")} WHERE id = ?`,
+    values,
+    function (err) {
+      if (err) return res.status(400).json({ error: err.message });
+      res.json({ updated: this.changes });
+    }
+  );
+});
+
 export default router;
