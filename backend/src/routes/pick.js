@@ -3,13 +3,15 @@ import db from "../db/database.js";
 
 const router = express.Router();
 
-// Fisher–Yates shuffle (unbiased)
+// Unbiased Fisher–Yates shuffle
 function pickRandom(array, count) {
   const shuffled = [...array];
+
   for (let i = shuffled.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
   }
+
   return shuffled.slice(0, count);
 }
 
@@ -19,7 +21,7 @@ router.post("/", (req, res) => {
   const parsedClassId = Number(class_id);
   const parsedCount = Number(count);
 
-  // Validation
+  // Validate input
   if (!Number.isInteger(parsedClassId) || parsedClassId <= 0) {
     return res.status(400).json({
       error: "class_id must be a positive integer",
@@ -46,7 +48,7 @@ router.post("/", (req, res) => {
         });
       }
 
-      // Clamp count so you never request more than exist
+      // Clamp count to available students
       const safeCount = Math.min(parsedCount, rows.length);
 
       const picked = pickRandom(rows, safeCount);
