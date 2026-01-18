@@ -173,8 +173,15 @@ onMounted(async () => {
 
 .panel { border: 1px solid #eee; border-radius: 16px; padding: 14px; }
 .row { display: flex; gap: 10px; margin: 12px 0; flex-wrap: wrap; }
-input, select { padding: 10px; border-radius: 10px; border: 1px solid #ddd; min-width: 240px; background-color: #3a3a3a; color: #fff; }
-select:focus, input:focus { outline: none; border-color: #fff;}
+input, select {
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  min-width: 240px;
+  background-color: #fff;
+  color: #111;
+}
+select:focus, input:focus { outline: none; border-color: #111; }
 button { padding: 10px 12px; border-radius: 10px; border: 1px solid #111; background: #111; color: #fff; cursor: pointer; }
 button:disabled { opacity: 0.6; cursor: not-allowed; }
 .danger { background: #b00020; border-color: #b00020; }

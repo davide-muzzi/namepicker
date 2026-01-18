@@ -78,8 +78,15 @@ onMounted(loadClasses);
 <style scoped>
 .row { display: flex; gap: 12px; align-items: end; flex-wrap: wrap; margin: 12px 0; }
 label { display: grid; gap: 6px; }
-select, input { padding: 10px; border-radius: 10px; border: 1px solid #ddd; min-width: 200px; background-color: #3a3a3a; color: #fff; }
-select:focus, input:focus { outline: none; border-color: #fff;}
+select, input {
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  min-width: 200px;
+  background-color: #fff;
+  color: #111;
+}
+select:focus, input:focus { outline: none; border-color: #111; }
 button { padding: 10px 12px; border-radius: 10px; border: 1px solid #111; background: #111; color: #fff; }
 button:disabled { opacity: 0.6; cursor: not-allowed; }
 .error { color: #b00020; }
