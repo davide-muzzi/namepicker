@@ -42,10 +42,13 @@ router.delete("/:id", (req, res) => {
 // update student
 router.put("/:id", (req, res) => {
   const { name, class_id } = req.body;
-  if (!name && !class_id)
-    return res.status(400).json({ error: "name or class_id required" });
 
-  // Build dynamic update
+  if (!name && !class_id) {
+    return res.status(400).json({
+      error: "name or class_id required",
+    });
+  }
+
   const fields = [];
   const values = [];
 
@@ -53,9 +56,17 @@ router.put("/:id", (req, res) => {
     fields.push("name = ?");
     values.push(name);
   }
+
   if (class_id) {
+    const parsedClassId = Number(class_id);
+    if (!Number.isInteger(parsedClassId) || parsedClassId <= 0) {
+      return res.status(400).json({
+        error: "class_id must be a positive integer",
+      });
+    }
+
     fields.push("class_id = ?");
-    values.push(class_id);
+    values.push(parsedClassId);
   }
 
   values.push(req.params.id);
@@ -64,10 +75,18 @@ router.put("/:id", (req, res) => {
     `UPDATE students SET ${fields.join(", ")} WHERE id = ?`,
     values,
     function (err) {
-      if (err) return res.status(400).json({ error: err.message });
+      if (err) {
+        return res.status(400).json({ error: err.message });
+      }
+
+      if (this.changes === 0) {
+        return res.status(404).json({ error: "student not found" });
+      }
+
       res.json({ updated: this.changes });
     }
   );
 });
+
 
 export default router;

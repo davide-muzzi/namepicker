@@ -33,16 +33,27 @@ router.delete("/:id", (req, res) => {
 // update class
 router.put("/:id", (req, res) => {
   const { name } = req.body;
-  if (!name) return res.status(400).json({ error: "name required" });
+
+  if (!name) {
+    return res.status(400).json({ error: "name required" });
+  }
 
   db.run(
     "UPDATE classes SET name = ? WHERE id = ?",
     [name, req.params.id],
     function (err) {
-      if (err) return res.status(400).json({ error: err.message });
+      if (err) {
+        return res.status(400).json({ error: err.message });
+      }
+
+      if (this.changes === 0) {
+        return res.status(404).json({ error: "class not found" });
+      }
+
       res.json({ updated: this.changes });
     }
   );
 });
+
 
 export default router;
