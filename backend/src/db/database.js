@@ -9,19 +9,21 @@ const __dirname = path.dirname(__filename);
 const DB_PATH = path.join(__dirname, "../../data/db.sqlite");
 const SCHEMA_PATH = path.join(__dirname, "schema.sql");
 
-export const db = new sqlite3.Database(DB_PATH, (err) => {
+const db = new sqlite3.Database(dbPath, (err) => {
   if (err) {
-    console.error("Failed to connect to SQLite DB:", err);
+    console.error("Failed to connect to database:", err.message);
     process.exit(1);
   }
   console.log("Connected to SQLite database");
+
   db.run("PRAGMA foreign_keys = ON;", (pragmaErr) => {
     if (pragmaErr) {
-      console.error("Failed to enable foreign keys:", pragmaErr);
+      console.error("Failed to enable foreign keys:", pragmaErr.message);
       process.exit(1);
     }
   });
 });
+
 
 // Initialize schema
 const schema = fs.readFileSync(SCHEMA_PATH, "utf-8");
