@@ -32,7 +32,7 @@ jobs:
           context: ./backend
           push: true
           tags: |
-            ghcr.io/${{ github.repository_owner }}/namepicker-backend:${{ github.run_number }}
+            ghcr.io/${{ github.repository }}/backend:${{ github.run_number }}
 
       - name: Build and push frontend image
         uses: docker/build-push-action@v6
@@ -40,21 +40,21 @@ jobs:
           context: ./frontend
           push: true
           tags: |
-            ghcr.io/${{ github.repository_owner }}/namepicker-frontend:${{ github.run_number }}
+            ghcr.io/${{ github.repository }}/frontend:${{ github.run_number }}
 
       - name: Generate docker-compose file
         run: |
           cat > docker-compose.generated.yml <<EOF
           services:
             backend:
-              image: ghcr.io/${{ github.repository_owner }}/namepicker-backend:${{ github.run_number }}
+              image: ghcr.io/${{ github.repository }}/backend:${{ github.run_number }}
               volumes:
                 - backend-db:/app/data
               networks:
                 - namepicker-net
 
             frontend:
-              image: ghcr.io/${{ github.repository_owner }}/namepicker-frontend:${{ github.run_number }}
+              image: ghcr.io/${{ github.repository }}/frontend:${{ github.run_number }}
               ports:
                 - "8324:80"
               depends_on:
