@@ -9,7 +9,7 @@ const __dirname = path.dirname(__filename);
 const DB_PATH = path.join(__dirname, "../../data/db.sqlite");
 const SCHEMA_PATH = path.join(__dirname, "schema.sql");
 
-const db = new sqlite3.Database(dbPath, (err) => {
+export const db = new sqlite3.Database(DB_PATH, (err) => {
   if (err) {
     console.error("Failed to connect to database:", err.message);
     process.exit(1);
@@ -24,7 +24,6 @@ const db = new sqlite3.Database(dbPath, (err) => {
   });
 });
 
-
 // Initialize schema
 const schema = fs.readFileSync(SCHEMA_PATH, "utf-8");
 db.exec(schema, (err) => {
@@ -34,3 +33,5 @@ db.exec(schema, (err) => {
   }
   console.log("Database schema initialized");
 });
+
+export default db;
